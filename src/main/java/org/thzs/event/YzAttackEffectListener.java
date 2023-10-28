@@ -1,6 +1,7 @@
 package org.thzs.event;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.thzs.effect.*;
+import org.thzs.effect.core.YzEffect;
+import org.thzs.effect.core.YzEffectFactory;
+import org.thzs.effect.core.YzEffectHandlerThread;
 
 import java.util.Objects;
 
@@ -32,16 +36,19 @@ public class YzAttackEffectListener implements Listener {
                         String type = s.replace("[Yz]", "");
                         switch (type) {
                             case "PointAttack":
-                                YzEffectHandlerThread.instance.add(new YzEffectPointAttack(event.getEntity(), new Location(p.getWorld(), 0, 3, 0), 2000, 50));
+                                YzEffectHandlerThread.instance.add(new YzEffectPoint(event.getEntity(), new Location(p.getWorld(), 0, 3, 0), 2000, 60));
                                 continue;
                             case "Circle":
-                                YzEffectHandlerThread.instance.add(new YzEffectCircle(p.getLocation(), 10, 1000));
+                                YzEffectHandlerThread.instance.add(new YzEffectCircle(p.getLocation(), 10, 1000,30));
                                 continue;
                             case "LineAttack":
-                                YzEffectHandlerThread.instance.add(new YzEffectLineAttack(p, event.getEntity(), 1000, 30));
+                                YzEffectHandlerThread.instance.add(new YzEffectLine(p, event.getEntity(), 1000, 30));
                                 continue;
+                            default:
+                                if(YzEffectFactory.EventCheck(type,event.getClass())) {
+                                    YzEffectFactory.create(type).apply(YzEffectHandlerThread.instance, event, new YamlConfiguration());
+                                }
                         }
-                        return;
                     }
                 }
             }

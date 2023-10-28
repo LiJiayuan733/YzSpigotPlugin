@@ -1,4 +1,4 @@
-package org.thzs.effect;
+package org.thzs.effect.core;
 
 public class YzEffectHandler implements Runnable{
     public boolean Run=true;

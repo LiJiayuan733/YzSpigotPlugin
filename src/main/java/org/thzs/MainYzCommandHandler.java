@@ -1,13 +1,16 @@
 package org.thzs;
 
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.thzs.effect.core.YzEffect;
 import org.thzs.uitils.ItemUtils;
 import org.thzs.uitils.PlayerUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MainYzCommandHandler implements CommandExecutor {
     /**
@@ -31,14 +34,9 @@ public class MainYzCommandHandler implements CommandExecutor {
     public boolean CommandLevelTwo(Player sender, Command command, String s, String[] strings){
         switch (strings[0]){
             case "gui":
-                if(strings.length==1){
-                    PlayerUtils.sendGift(sender,new ItemStack(Material.APPLE));
-                    return true;
-                }else {
-                    return CommandLevelTwo_gui(sender,command,s,strings);
-                }
+                return CommandLevelTwo_gui(sender,command,s,strings);
             case "particle":
-
+                return CommandLevelTwo_particle(sender,command,s,strings);
             case "help":
                 break;
             default:
@@ -64,7 +62,16 @@ public class MainYzCommandHandler implements CommandExecutor {
     }
     public boolean CommandLevelTwo_particle(Player sender, Command command, String s, String[] strings){
         switch (strings[1]){
-
+            case "create":
+                if(strings.length==3){
+                    File file=new File(YzPlugin.instance.getDataFolder().getAbsoluteFile()+"/"+strings[2]+".yml");
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                break;
         }
         return true;
     }

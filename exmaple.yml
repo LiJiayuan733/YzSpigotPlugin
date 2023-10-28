@@ -1,0 +1,28 @@
+Event: EntityDamageByEntityEvent
+Damager: Player
+Entity: Entity
+Struct:
+  Circle1:
+    Type: Circle
+    Particle: HEART
+    During: 1000
+    Num: 100
+    Center: $Damager
+    R: 5
+    Tracing: true
+  Line1:
+    Type: Line
+    Particle: HEART
+    During: 1000
+    Num: 100
+    Start: $Damager
+    End: $Entity
+    Tracing: true
+  Point1:
+    Type: Point
+    Particle: HEART
+    During: 1000
+    Num: 100
+    Position: $Damager
+    Offset: [0,3,0]
+    Tracing: true
