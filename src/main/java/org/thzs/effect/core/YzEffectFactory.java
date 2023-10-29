@@ -62,12 +62,16 @@ public class YzEffectFactory {
         assert mem != null;
         for(String s:mem.getKeys(false)){
             Object p;
-            if ((p=config.get(s)) instanceof String){
-
+            p=mem.get(s);
+            if (p instanceof MemorySection){
+                String type=((MemorySection) p).getString("Type");
+                YzEffect effect=getEffect(type);
+                if(effect!=null){
+                    box.put(effect, (MemorySection) p);
+                }
             }
-            Bukkit.getPlayer("H7543").sendMessage(config.get(s).toString());
         }
-        return null;
+        return box;
     }
     public static YzEffect getEffect(String s){
         switch (s){

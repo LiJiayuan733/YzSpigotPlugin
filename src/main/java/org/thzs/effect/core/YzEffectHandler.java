@@ -18,8 +18,12 @@ public class YzEffectHandler implements Runnable{
                     throw new RuntimeException(e);
                 }
             }else{
-                effect.update(System.currentTimeMillis());
-                effect.check();
+                try {
+                    effect.update(System.currentTimeMillis());
+                    effect.check();
+                } catch (Exception e){
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

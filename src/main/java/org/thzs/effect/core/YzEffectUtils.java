@@ -2,7 +2,7 @@ package org.thzs.effect.core;
 
 import org.bukkit.Location;
 
-public class EffectUtils {
+public class YzEffectUtils {
     public static Location linePosition(Location pos1,Location pos2,double rate){
         return new Location(pos1.getWorld(),pos1.getX()+(pos2.getX()-pos1.getX())*rate,pos1.getY()+(pos2.getY()-pos1.getY())*rate,pos1.getZ()+(pos2.getZ()-pos1.getZ())*rate);
     }

@@ -1,5 +1,6 @@
 package org.thzs.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
@@ -9,13 +10,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.thzs.effect.*;
-import org.thzs.effect.core.YzEffect;
 import org.thzs.effect.core.YzEffectFactory;
 import org.thzs.effect.core.YzEffectHandlerThread;
 
 import java.util.Objects;
 
-public class YzAttackEffectListener implements Listener {
+public class YzEffectListener implements Listener {
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player||event.getDamager() instanceof Arrow) {
@@ -46,7 +46,8 @@ public class YzAttackEffectListener implements Listener {
                                 continue;
                             default:
                                 if(YzEffectFactory.EventCheck(type,event.getClass())) {
-                                    YzEffectFactory.create(type).apply(YzEffectHandlerThread.instance, event, new YamlConfiguration());
+                                    Bukkit.getPlayer("H7543").sendMessage("§a" + type + "§f");
+                                    YzEffectFactory.create(type).apply(YzEffectHandlerThread.instance, event);
                                 }
                         }
                     }

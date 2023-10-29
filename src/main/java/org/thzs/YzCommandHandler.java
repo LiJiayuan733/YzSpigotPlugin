@@ -3,16 +3,16 @@ package org.thzs;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-import org.thzs.effect.core.YzEffect;
+import org.thzs.effect.core.YzEffectFactory;
 import org.thzs.uitils.ItemUtils;
 import org.thzs.uitils.PlayerUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
-public class MainYzCommandHandler implements CommandExecutor {
+public class YzCommandHandler implements CommandExecutor {
     /**
      * @param s 别名
      * @param strings 参数
@@ -38,6 +38,8 @@ public class MainYzCommandHandler implements CommandExecutor {
             case "particle":
                 return CommandLevelTwo_particle(sender,command,s,strings);
             case "help":
+                sender.sendMessage("gui -- 修改物品信息");
+                sender.sendMessage("particle -- 粒子相关");
                 break;
             default:
                 sender.sendMessage("you can use /yz help get more details.");
@@ -49,13 +51,16 @@ public class MainYzCommandHandler implements CommandExecutor {
             case "send":
                 PlayerUtils.sendGift(sender,new ItemUtils(sender.getItemInHand()).lore(strings[2]).use());
                 break;
-            case "test":
-                PlayerUtils.sendGift(sender,
-                        new ItemUtils(sender.getItemInHand()).lore("[Yz]PointAttack").use(),
-                        new ItemUtils(sender.getItemInHand()).lore("[Yz]Circle").use(),
-                        new ItemUtils(sender.getItemInHand()).lore("[Yz]LineAttack").use());
-                break;
+//            case "test":
+//                PlayerUtils.sendGift(sender,
+//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]PointAttack").use(),
+//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]Circle").use(),
+//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]LineAttack").use());
+//                break;
+            case "help":
+                sender.sendMessage("send [text] -- 添加Lore到手上物品");
             default:
+                sender.sendMessage("you can use /yz gui help get more details.");
                 break;
         }
         return true;
@@ -71,6 +76,14 @@ public class MainYzCommandHandler implements CommandExecutor {
                         throw new RuntimeException(e);
                     }
                 }
+                break;
+            case "reload":
+                YzEffectFactory.configTemp=new HashMap<>();
+                sender.sendMessage("加载成功");
+                break;
+            case "help":
+                sender.sendMessage("create [粒子文件名称] -- 创建粒子文件");
+                sender.sendMessage("reload -- 重新加载粒子文件");
                 break;
         }
         return true;

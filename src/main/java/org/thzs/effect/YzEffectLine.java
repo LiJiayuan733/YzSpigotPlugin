@@ -2,18 +2,23 @@ package org.thzs.effect;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.thzs.effect.core.EffectUtils;
+import org.thzs.effect.core.YzEffectEventInfoHandler;
+import org.thzs.effect.core.YzEffectFactory;
+import org.thzs.effect.core.YzEffectUtils;
 import org.thzs.effect.core.YzEffect;
+
+import java.util.Objects;
 
 
 public class YzEffectLine extends YzEffect {
     public Location pos1,pos2;
-    public boolean tracing=false;
+    public boolean tracing1=false,tracing2=false;
     public double during;
     public int nums;
     public Entity epos1,epos2;
@@ -26,7 +31,8 @@ public class YzEffectLine extends YzEffect {
         this.nums=nums;
         this.pos2=pos2;
         this.pos1=pos1;
-        tracing=false;
+        tracing1=false;
+        tracing2=false;
     }
     public YzEffectLine(Entity pos1, Entity pos2, double during, int nums){
         super();
@@ -34,7 +40,8 @@ public class YzEffectLine extends YzEffect {
         this.nums=nums;
         this.epos2=pos2;
         this.epos1=pos1;
-        tracing=true;
+        tracing1=true;
+        tracing2=false;
     }
     public int dela=0;
     @Override
@@ -43,17 +50,15 @@ public class YzEffectLine extends YzEffect {
         dela+=delta;
         if(dela>=YzEffect.Tick){
             dela=0;
-            if(tracing){
-                pos1=epos1.getLocation();pos2=epos2.getLocation();
-                Location pos3= EffectUtils.linePosition(pos1,pos2,aliveTime/during);
-                for (Player p: Bukkit.getOnlinePlayers()){
-                    p.spawnParticle(particle,pos3,(int) (nums/(during/YzEffect.Tick)));
-                }
-            }else {
-                Location pos3 = EffectUtils.linePosition(pos1, pos2, aliveTime / during);
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.spawnParticle(particle, pos3, (int) (nums/(during/YzEffect.Tick)));
-                }
+            if(tracing1){
+                pos1=epos1.getLocation();
+            }
+            if(tracing2){
+                pos2=epos2.getLocation();
+            }
+            Location pos3 = YzEffectUtils.linePosition(pos1, pos2, aliveTime / during);
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.spawnParticle(particle, pos3, (int) (nums/(during/YzEffect.Tick)));
             }
         }
     }
@@ -63,8 +68,39 @@ public class YzEffectLine extends YzEffect {
     }
 
     @Override
-    public void loadForYaml(YamlConfiguration config, Event event) {
-
+    public YzEffect loadForYaml(MemorySection config, Event event) {
+        if (configKeyCheck(config, "Particle","During", "Num", "Start", "End")) {
+            particle = particle(config);
+            during = config.getDouble("During");
+            nums = config.getInt("Num");
+            if (config.isString("Start")) {
+                Object ob= YzEffectEventInfoHandler.getInfo(event,config.getString("Start"));
+                if(ob==null){
+                    Bukkit.getLogger().info("[Yz]Particle:Line->Start Value Not Found");
+                } else if(ob instanceof Location) {
+                    pos1 = (Location) ob;
+                }else  if(ob instanceof Entity){
+                    epos1 = (Entity) ob;
+                    tracing1=true;
+                }
+            }else if(config.isList("Center")){
+                //TODO: 标准地址
+            }
+            if (config.isString("End")) {
+                Object ob= YzEffectEventInfoHandler.getInfo(event,config.getString("End"));
+                if(ob==null){
+                    Bukkit.getLogger().info("[Yz]Particle:Line->End Value Not Found");
+                } else if(ob instanceof Location) {
+                    pos2 = (Location) ob;
+                }else  if(ob instanceof Entity){
+                    epos2 = (Entity) ob;
+                    tracing2=true;
+                }
+            }else if(config.isList("Center")){
+                //TODO: 标准地址
+            }
+        }
+        return this;
     }
     @Override
     public boolean isSupportEvent(Class<? extends Event> clazz) {

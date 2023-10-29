@@ -13,28 +13,39 @@ public class YzTabCompleter implements TabCompleter {
         String cmd=command.getName();
         if(cmd.equals("yz")){
             if (strings.length == 1){
-                return level2(strings[0]);
+                return level2(strings);
             }else if(strings.length == 2){
-                return level3(strings[1]);
+                return level3(strings);
             }
         }
         return null;
     }
-    public List<String> level2(String l){
+    public List<String> level2(String[] strings){
         String[] list={"gui","particle","help"};
         List<String> list1=new ArrayList<>();
         for (String s:list) {
-            if(s.startsWith(l)){
+            if(s.startsWith(strings[0])){
                 list1.add(s);
             }
         }
         return list1;
     }
-    public List<String> level3(String l){
-        String[] list={"send","test","create"};
+    public List<String> level3(String[] strings){
+        String[] list;
+        switch (strings[0]){
+            case "gui":
+                list=new String[]{"send","test"};
+                break;
+            case "particle":
+                list=new String[]{"create","reload","help"};
+                break;
+            default:
+                list=new String[]{};
+                break;
+        }
         List<String> list1=new ArrayList<>();
         for (String s:list) {
-            if(s.startsWith(l)){
+            if(s.startsWith(strings[1])){
                 list1.add(s);
             }
         }

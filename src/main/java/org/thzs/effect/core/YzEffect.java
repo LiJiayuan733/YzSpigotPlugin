@@ -1,9 +1,14 @@
 package org.thzs.effect.core;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.World;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.Event;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class YzEffect{
@@ -44,6 +49,26 @@ public abstract class YzEffect{
     public boolean isFinish(){
         return aliveTime>=1000;
     }
-    public abstract void loadForYaml(YamlConfiguration config, Event event);
+    public abstract YzEffect loadForYaml(MemorySection config, Event event);
+    protected static boolean configKeyCheck(MemorySection config,String ...keys){
+        for(String s:keys){
+            if(!config.contains(s)){
+                return false;
+            }
+        }
+        return true;
+    }
+    protected static Particle particle(MemorySection config){
+        return YzEffectFactory.convertParticle(Objects.requireNonNull(config.getString("Particle")));
+    }
+    protected static Location location(List<?> data){
+        Object o=data.get(0);
+        if(o instanceof Integer||o instanceof Float || o instanceof Double) {
+            return new Location(null, (double) data.get(0), (double) data.get(1), (double) data.get(2));
+        }else {
+            Bukkit.getLogger().info("[Yz]getPosition Failed:"+data.toString());
+            return new Location(null,0,0,0);
+        }
+    }
     public abstract boolean isSupportEvent(Class<? extends Event> clazz);
 }
