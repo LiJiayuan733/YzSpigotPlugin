@@ -3,17 +3,13 @@ package org.thzs.effect;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.thzs.effect.core.YzEffectEventInfoHandler;
-import org.thzs.effect.core.YzEffectFactory;
 import org.thzs.effect.core.YzEffectUtils;
 import org.thzs.effect.core.YzEffect;
-
-import java.util.Objects;
 
 
 public class YzEffectLine extends YzEffect {
@@ -57,7 +53,7 @@ public class YzEffectLine extends YzEffect {
                 pos2=epos2.getLocation();
             }
             Location pos3 = YzEffectUtils.linePosition(pos1, pos2, aliveTime / during);
-            for (Player p : Bukkit.getOnlinePlayers()) {
+            for (Player p : pos3.getWorld().getPlayers()) {
                 p.spawnParticle(particle, pos3, (int) (nums/(during/YzEffect.Tick)));
             }
         }

@@ -3,7 +3,6 @@ package org.thzs.effect.core;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.Event;
 
@@ -14,14 +13,25 @@ import java.util.UUID;
 public abstract class YzEffect{
     public static float Tick= (float) 1000 /10;
     public UUID uuid;
+    public int Channel;
     public Particle particle=Particle.HEART;
     public YzEffect(){
         this.lastTime=System.currentTimeMillis();
         this.aliveTime=0;
     }
-    public void setUuid(UUID uuid){
+    public void setUuidAndChannel(UUID uuid,int channel){
         this.uuid=uuid;
+        this.Channel=channel;
     }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public int getChannel() {
+        return Channel;
+    }
+
     public void setParticle(Particle particle){
         this.particle=particle;
     }
@@ -63,8 +73,10 @@ public abstract class YzEffect{
     }
     protected static Location location(List<?> data){
         Object o=data.get(0);
-        if(o instanceof Integer||o instanceof Float || o instanceof Double) {
+        if(o instanceof Float || o instanceof Double) {
             return new Location(null, (double) data.get(0), (double) data.get(1), (double) data.get(2));
+        }else if(o instanceof Integer){
+            return new Location(null, (int) data.get(0), (int) data.get(1), (int) data.get(2));
         }else {
             Bukkit.getLogger().info("[Yz]getPosition Failed:"+data.toString());
             return new Location(null,0,0,0);

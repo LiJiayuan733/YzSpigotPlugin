@@ -49,7 +49,7 @@ public class YzEffectPoint extends YzEffect {
             if(tracing){
                 pos1=epos1.getLocation().clone().add(offset);
             }
-            for (Player p: Bukkit.getOnlinePlayers()){
+            for (Player p: pos1.getWorld().getPlayers()){
                 p.spawnParticle(particle,pos1.clone().add(offset), (int) (nums/(during/YzEffect.Tick)));
             }
         }
@@ -78,7 +78,11 @@ public class YzEffectPoint extends YzEffect {
             }
             if(config.isList("Offset")){
                 offset=location(Objects.requireNonNull(config.getList("Offset")));
-                offset.setWorld(epos1.getWorld());
+                if(pos1!=null){
+                    offset.setWorld(pos1.getWorld());
+                }else if(epos1!=null){
+                    offset.setWorld(epos1.getWorld());
+                }
             }
         }
         return this;

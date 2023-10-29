@@ -2,12 +2,16 @@ package org.thzs.effect.core;
 
 public class YzEffectHandler implements Runnable{
     public boolean Run=true;
+    public int Channel=0;
+    public YzEffectHandler(int Channel){
+        this.Channel=Channel;
+    }
     @Override
     public void run() {
         while (Run){
             YzEffect effect;
             try{
-                effect=YzEffectHandlerThread.instance.hasEffect();
+                effect=YzEffectHandlerThread.instance.hasEffect(Channel);
             }catch (Exception e){
                 continue;
             }

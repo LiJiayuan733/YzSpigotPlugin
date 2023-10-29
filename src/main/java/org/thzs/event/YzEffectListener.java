@@ -46,7 +46,6 @@ public class YzEffectListener implements Listener {
                                 continue;
                             default:
                                 if(YzEffectFactory.EventCheck(type,event.getClass())) {
-                                    Bukkit.getPlayer("H7543").sendMessage("§a" + type + "§f");
                                     YzEffectFactory.create(type).apply(YzEffectHandlerThread.instance, event);
                                 }
                         }

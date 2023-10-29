@@ -77,7 +77,7 @@ public class YzEffectCircle extends YzEffect {
                 pos1=target.getLocation();
             }
             Location pos3 = YzEffectUtils.cirPosition(pos1, r, aliveTime / during);
-            for (Player p : Bukkit.getOnlinePlayers()) {
+            for (Player p : pos3.getWorld().getPlayers()) {
                 p.spawnParticle(particle, pos3, (int) (nums / (during / YzEffect.Tick)));
             }
         }

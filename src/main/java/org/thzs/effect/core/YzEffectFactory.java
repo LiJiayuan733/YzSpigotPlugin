@@ -56,7 +56,6 @@ public class YzEffectFactory {
         return createBox(config);
     }
     public static YzEffectFactoryBox createBox(YamlConfiguration config){
-        //TODO: 出错就是config提取的错误
         YzEffectFactoryBox box=new YzEffectFactoryBox();
         MemorySection mem= (MemorySection) config.get("Struct");
         assert mem != null;

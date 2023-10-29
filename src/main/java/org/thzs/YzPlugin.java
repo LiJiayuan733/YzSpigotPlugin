@@ -19,7 +19,7 @@ public class YzPlugin extends JavaPlugin {
             file.mkdirs();
         }
         getLogger().info(file.getAbsolutePath());
-        effect=new YzEffectHandlerThread(1);
+        effect=new YzEffectHandlerThread(2);
         System.out.println("YzPlugin Enable");
         Objects.requireNonNull(Bukkit.getPluginCommand("yz")).setExecutor(new YzCommandHandler());
         Objects.requireNonNull(Bukkit.getPluginCommand("yz")).setTabCompleter(new YzTabCompleter());
