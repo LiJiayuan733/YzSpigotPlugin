@@ -34,7 +34,7 @@ public class YzTabCompleter implements TabCompleter {
         String[] list;
         switch (strings[0]){
             case "gui":
-                list=new String[]{"send","test"};
+                list=new String[]{"send"};
                 break;
             case "particle":
                 list=new String[]{"create","reload","help"};

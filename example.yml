@@ -5,7 +5,7 @@ Struct:
   Circle1:            #随便写名字，不要重复就好
     Type: Circle      #粒子运动类型 暂时就Circle Line Point
     Particle: HEART   #粒子类型
-    During: 2000      #持续时间
+    During: 2000      #持续时间 单位ms
     Num: 100          #总粒子数量
     Center: $Damager  #圆心参数 $表示取位置,获取一次位置后，不再更新位置，直接填写Damager会一直更新位置
     R: 5              #圆大小

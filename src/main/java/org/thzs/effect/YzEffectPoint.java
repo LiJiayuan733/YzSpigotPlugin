@@ -1,6 +1,5 @@
 package org.thzs.effect;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Entity;
@@ -10,7 +9,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.thzs.effect.core.YzEffect;
 import org.thzs.effect.core.YzEffectEventInfoHandler;
 
-import java.util.List;
 import java.util.Objects;
 
 
