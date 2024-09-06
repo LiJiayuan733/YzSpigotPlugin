@@ -26,7 +26,7 @@ public class YzRecipeConfig {
         }
     }
     public void addRecipe(Location location){
-        Recipe.add(new YzRecipe(location));
+        Recipe.add(new YzRecipe(location,Recipe.size()));
     }
     public void reload(){
         Recipe=new ArrayList<>();

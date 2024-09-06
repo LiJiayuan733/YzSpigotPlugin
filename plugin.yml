@@ -1,8 +1,8 @@
 name: YzPlugin
 main: org.thzs.YzPlugin
-version: 0.2
+version: 0.3
 author: thzs
-api-version: 1.21
+api-version: 1.20
 commands:
   yz:
     description: 这是这个插件的开始符号

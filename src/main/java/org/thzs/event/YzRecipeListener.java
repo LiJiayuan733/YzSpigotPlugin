@@ -8,27 +8,49 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.thzs.YzPlugin;
 import org.thzs.recipe.YzRecipe;
 
+import java.util.List;
 import java.util.Objects;
 
 public class YzRecipeListener implements Listener {
+    public ItemStack random(YzRecipe result,Inventory inventory){
+        if(result.resultPRange[result.resultSize-1]!=0&&result.resultSize>1){
+            double d=YzPlugin.instance.random.nextFloat((float) 0, (float) result.resultPRange[result.resultSize-1]);
+            System.out.println(result.resultPRange[result.resultSize-1]+","+d);
+            if(result.resultSize==2){
+                if(result.resultPRange[0]<d){
+                    return result.result[1];
+                }else{
+                    return result.result[0];
+                }
+            }else{
+                if(result.resultPRange[1]<d){
+                    return result.result[2];
+                }else if(result.resultPRange[0]<d){
+                    return result.result[1];
+                }else{
+                    return result.result[0];
+                }
+            }
+        }else{
+            return result.result[0];
+        }
+    }
     //完成最后的检测
     static class RecipeSetRunnable implements Runnable{
         int uncheck;
         int uncheckIndex;
         ItemStack uncheckItem;
         CraftingInventory inventory;
-        ItemStack result;
-        public RecipeSetRunnable(int uncheckIndex,ItemStack uncheckItem,int uncheck,CraftingInventory inventory,ItemStack result){
+        YzRecipe result;
+        public RecipeSetRunnable(int uncheckIndex,ItemStack uncheckItem,int uncheck,CraftingInventory inventory,YzRecipe result){
             this.uncheckItem=uncheckItem;
             this.uncheck=uncheck;
             this.uncheckIndex=uncheckIndex;
@@ -42,9 +64,11 @@ public class YzRecipeListener implements Listener {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if (uncheck == 1 && ((CraftingInventory) inventory).getMatrix()[uncheckIndex] != null &&
-                    ((CraftingInventory) inventory).getMatrix()[uncheckIndex].getType() == uncheckItem.getType()) {
-                ((CraftingInventory) inventory).setResult(result);
+            if (uncheck == 1 && inventory.getMatrix()[uncheckIndex] != null &&
+                    inventory.getMatrix()[uncheckIndex].getType() == uncheckItem.getType()) {
+                ((CraftingInventory) inventory).setResult(result.resultExample);
+            }else if(uncheck==0){
+                ((CraftingInventory) inventory).setResult(result.resultExample);
             }
         }
     }
@@ -72,7 +96,7 @@ public class YzRecipeListener implements Listener {
                     return;
                 }
             }
-            new Thread(new RecipeSetRunnable(uncheckIndex, uncheckItem, uncheck, (CraftingInventory) inventory,recipe.result.clone())).start();
+            new Thread(new RecipeSetRunnable(uncheckIndex, uncheckItem, uncheck, (CraftingInventory) inventory,recipe)).start();
         }
 //        for (Location i: YzRecipeUtils.RecipeLocation){
 //            Block block=i.getBlock();
@@ -118,6 +142,24 @@ public class YzRecipeListener implements Listener {
                 case SWAP_WITH_CURSOR:
                     ItemStack itemStack=event.getCursor();
                     RecipeCheck(inventory,event.getView().getPlayer(),event);
+                    break;
+                case PICKUP_ONE:
+                case PICKUP_HALF:
+                case PICKUP_SOME:
+                case PICKUP_ALL:
+                    ItemStack item=event.getCurrentItem();
+                    ItemMeta meta=item.getItemMeta();
+                    if(meta!=null){
+                        List<String> str=meta.getLore();
+                        if(str!=null){
+                            for(String s:str){
+                                if(s.startsWith("[EXAMPLE")){
+                                    int index=Integer.parseInt(s.replace("[EXAMPLE","").replace("]",""));
+                                    event.setCurrentItem(random(YzPlugin.instance.recipe.Recipe.get(index),inventory));
+                                }
+                            }
+                        }
+                    }
                     break;
                 default:
             }

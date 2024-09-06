@@ -10,14 +10,17 @@ import org.thzs.uitils.YzRecipeUtils;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Random;
 
 public class YzPlugin extends JavaPlugin {
+    public Random random;
     public YzEffectHandlerThread effect;
     public YzRecipeConfig recipe;
     public static YzPlugin instance;
     @Override
     public void onEnable() {
         super.onEnable();
+        random=new Random();
         File file=getDataFolder();
         if(!file.exists()){
             file.mkdirs();

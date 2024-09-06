@@ -98,8 +98,14 @@ public class YzCommandHandler implements CommandExecutor {
                 YzPlugin.instance.recipe.reload();
                 YzPlugin.instance.getLogger().info("成功加载"+YzPlugin.instance.recipe.Recipe.size()+"个配方。");
                 break;
+            case "p":
+                if(strings.length>=3){
+                    sender.setItemInHand(new ItemUtils(sender.getItemInHand()).lore("[YzP]"+strings[2]).use());
+                }
+                break;
             case "help":
                 sender.sendMessage("reload -- 重新加载合成配方");
+                sender.sendMessage("p [Number] -- 设置物品获得概率");
             default:
                 sender.sendMessage("you can use /yz recipe help get more details.");
                 break;
