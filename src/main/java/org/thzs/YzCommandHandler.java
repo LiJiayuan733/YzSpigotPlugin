@@ -37,9 +37,12 @@ public class YzCommandHandler implements CommandExecutor {
                 return CommandLevelTwo_gui(sender,command,s,strings);
             case "particle":
                 return CommandLevelTwo_particle(sender,command,s,strings);
+            case "recipe":
+                return CommandLevelTwo_recipe(sender,command,s,strings);
             case "help":
                 sender.sendMessage("gui -- 修改物品信息");
                 sender.sendMessage("particle -- 粒子相关");
+                sender.sendMessage("recipe -- 合成表相关");
                 break;
             default:
                 sender.sendMessage("you can use /yz help get more details.");
@@ -51,12 +54,12 @@ public class YzCommandHandler implements CommandExecutor {
             case "send":
                 PlayerUtils.sendGift(sender,new ItemUtils(sender.getItemInHand()).lore(strings[2]).use());
                 break;
-//            case "test":
-//                PlayerUtils.sendGift(sender,
-//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]PointAttack").use(),
-//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]Circle").use(),
-//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]LineAttack").use());
-//                break;
+            case "test":
+                PlayerUtils.sendGift(sender,
+                        new ItemUtils(sender.getItemInHand()).lore("[Yz]PointAttack").use(),
+                        new ItemUtils(sender.getItemInHand()).lore("[Yz]Circle").use(),
+                        new ItemUtils(sender.getItemInHand()).lore("[Yz]LineAttack").use());
+                break;
             case "help":
                 sender.sendMessage("send [text] -- 添加Lore到手上物品");
             default:
@@ -84,6 +87,25 @@ public class YzCommandHandler implements CommandExecutor {
             case "help":
                 sender.sendMessage("create [粒子文件名称] -- 创建粒子文件");
                 sender.sendMessage("reload -- 重新加载粒子文件");
+                break;
+        }
+        return true;
+    }
+    public boolean CommandLevelTwo_recipe(Player sender, Command command, String s, String[] strings){
+        switch (strings[1]){
+            case "send":
+                PlayerUtils.sendGift(sender,new ItemUtils(sender.getItemInHand()).lore(strings[2]).use());
+                break;
+//            case "test":
+//                PlayerUtils.sendGift(sender,
+//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]PointAttack").use(),
+//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]Circle").use(),
+//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]LineAttack").use());
+//                break;
+            case "help":
+                sender.sendMessage("send [text] -- 添加Lore到手上物品");
+            default:
+                sender.sendMessage("you can use /yz recipe help get more details.");
                 break;
         }
         return true;

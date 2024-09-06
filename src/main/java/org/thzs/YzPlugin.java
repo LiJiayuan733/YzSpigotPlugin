@@ -1,6 +1,8 @@
 package org.thzs;
 
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.thzs.effect.core.YzEffectHandlerThread;
 import org.thzs.event.YzEffectListener;

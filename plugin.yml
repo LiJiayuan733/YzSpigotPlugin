@@ -2,6 +2,7 @@ name: YzPlugin
 main: org.thzs.YzPlugin
 version: 0.2
 author: thzs
+api-version: 1.21
 commands:
   yz:
     description: 这是这个插件的开始符号

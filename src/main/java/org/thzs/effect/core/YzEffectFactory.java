@@ -1,6 +1,5 @@
 package org.thzs.effect.core;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,7 +14,6 @@ import org.thzs.effect.YzEffectPoint;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class YzEffectFactory {
     public static HashMap<String,YamlConfiguration> configTemp=new HashMap<>();
