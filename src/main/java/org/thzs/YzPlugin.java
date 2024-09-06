@@ -1,17 +1,19 @@
 package org.thzs;
 
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.thzs.effect.core.YzEffectHandlerThread;
+import org.thzs.recipe.YzRecipeConfig;
 import org.thzs.event.YzEffectListener;
+import org.thzs.event.YzRecipeListener;
+import org.thzs.uitils.YzRecipeUtils;
 
 import java.io.File;
 import java.util.Objects;
 
 public class YzPlugin extends JavaPlugin {
     public YzEffectHandlerThread effect;
+    public YzRecipeConfig recipe;
     public static YzPlugin instance;
     @Override
     public void onEnable() {
@@ -20,18 +22,25 @@ public class YzPlugin extends JavaPlugin {
         if(!file.exists()){
             file.mkdirs();
         }
-        getLogger().info(file.getAbsolutePath());
+
+        YzPlugin.instance=this;
+
         effect=new YzEffectHandlerThread(2);
-        System.out.println("YzPlugin Enable");
+        recipe=new YzRecipeConfig(YzRecipeUtils.loadRecipeConfig());
+
+        getLogger().info("Yz Recipe Count: "+recipe.Recipe.size());
         Objects.requireNonNull(Bukkit.getPluginCommand("yz")).setExecutor(new YzCommandHandler());
         Objects.requireNonNull(Bukkit.getPluginCommand("yz")).setTabCompleter(new YzTabCompleter());
+
         Bukkit.getPluginManager().registerEvents(new YzEffectListener(), this);
-        YzPlugin.instance=this;
+        Bukkit.getPluginManager().registerEvents(new YzRecipeListener(), this);
+        getLogger().info("YzPlugin Enable");
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-        System.out.println("YzPlugin Disable");
+        YzRecipeUtils.saveRecipeConfig(recipe.RecipeLocation);
+        getLogger().info("YzPlugin Disable");
     }
 }

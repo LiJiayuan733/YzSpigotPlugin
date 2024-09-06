@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.thzs.effect.core.YzEffectFactory;
+import org.thzs.recipe.YzRecipe;
 import org.thzs.uitils.ItemUtils;
 import org.thzs.uitils.PlayerUtils;
 
@@ -42,7 +43,7 @@ public class YzCommandHandler implements CommandExecutor {
             case "help":
                 sender.sendMessage("gui -- 修改物品信息");
                 sender.sendMessage("particle -- 粒子相关");
-                sender.sendMessage("recipe -- 合成表相关");
+                sender.sendMessage("recipe -- 合成配方相关");
                 break;
             default:
                 sender.sendMessage("you can use /yz help get more details.");
@@ -93,17 +94,12 @@ public class YzCommandHandler implements CommandExecutor {
     }
     public boolean CommandLevelTwo_recipe(Player sender, Command command, String s, String[] strings){
         switch (strings[1]){
-            case "send":
-                PlayerUtils.sendGift(sender,new ItemUtils(sender.getItemInHand()).lore(strings[2]).use());
+            case "reload":
+                YzPlugin.instance.recipe.reload();
+                YzPlugin.instance.getLogger().info("成功加载"+YzPlugin.instance.recipe.Recipe.size()+"个配方。");
                 break;
-//            case "test":
-//                PlayerUtils.sendGift(sender,
-//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]PointAttack").use(),
-//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]Circle").use(),
-//                        new ItemUtils(sender.getItemInHand()).lore("[Yz]LineAttack").use());
-//                break;
             case "help":
-                sender.sendMessage("send [text] -- 添加Lore到手上物品");
+                sender.sendMessage("reload -- 重新加载合成配方");
             default:
                 sender.sendMessage("you can use /yz recipe help get more details.");
                 break;

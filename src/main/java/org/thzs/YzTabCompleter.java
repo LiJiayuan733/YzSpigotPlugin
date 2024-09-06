@@ -21,7 +21,7 @@ public class YzTabCompleter implements TabCompleter {
         return null;
     }
     public List<String> level2(String[] strings){
-        String[] list={"gui","particle","help"};
+        String[] list={"gui","recipe","particle","help"};
         List<String> list1=new ArrayList<>();
         for (String s:list) {
             if(s.startsWith(strings[0])){
@@ -38,6 +38,9 @@ public class YzTabCompleter implements TabCompleter {
                 break;
             case "particle":
                 list=new String[]{"create","reload","help"};
+                break;
+            case "recipe":
+                list=new String[]{"reload","help"};
                 break;
             default:
                 list=new String[]{};
