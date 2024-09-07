@@ -1,12 +1,19 @@
 package org.thzs.recipe;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.thzs.YzPlugin;
 import org.thzs.uitils.ItemUtils;
+
+import java.util.Arrays;
 
 public class YzRecipe {
     public static int[] ChestBlockIndexMap ={0,1,2, 9,10,11, 18,19,20,
@@ -20,6 +27,9 @@ public class YzRecipe {
     public int resultSize;
     public double[] resultPRange= {0,0,0};
     public String[] Say={null,null,null};
+    public NamespacedKey key;
+    public char[] map={'A', 'B', 'C','D','E','F','G','H','I'};
+
     public YzRecipe(Location location,int index){ //位置
         Block block=location.getBlock();
         if(block.getType()== Material.CHEST){
@@ -54,6 +64,50 @@ public class YzRecipe {
             }
             resultSize=setIndex;
         }
+
+        key=new NamespacedKey(YzPlugin.instance, "YZ"+index);
+        if(resultExample!=null){
+            ShapedRecipe recipe = new ShapedRecipe(key, resultExample);
+            Material[] itemsk=new Material[9];
+            String[] sk={"","",""};
+            int index1=0;
+
+            for(int i=0;i<9;i++){
+                if(items[i]==null){
+                    continue;
+                }
+                boolean flag=false;
+                for(int j=0;j<index1;j++){
+                    if(itemsk[j]==items[i].getType()){
+                        flag=true;
+                    }
+                }
+                if(!flag){
+                    itemsk[index1]=items[i].getType();
+                    index1++;
+                }
+            }
+            for (int i = 0; i < 9; i++){
+                if(items[i]==null){
+                    sk[i/3]+=' ';
+                    continue;
+                }
+                for(int j=0;j<index1;j++){
+                    if(itemsk[j]==items[i].getType()){
+                        sk[i/3]+=map[j];
+                        break;
+                    }
+                }
+            }
+            recipe.shape(sk[0],sk[1],sk[2]);
+            System.out.println(Arrays.toString(sk)+Arrays.toString(itemsk));
+            for(int j=0;j<index1;j++){
+                recipe.setIngredient(map[j],itemsk[j]);
+            }
+//            recipe.setIngredient('J',Material.AIR);
+
+            Bukkit.addRecipe(recipe);
+        }
     }
     public String findLore(ItemStack item,String head){
         if(item.getItemMeta()==null){
@@ -68,5 +122,8 @@ public class YzRecipe {
             }
         }
         return null;
+    }
+    public void deinit(){
+        Bukkit.removeRecipe(key);
     }
 }

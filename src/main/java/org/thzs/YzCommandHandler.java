@@ -118,6 +118,7 @@ public class YzCommandHandler implements CommandExecutor {
                 sender.sendMessage("reload -- 重新加载合成配方");
                 sender.sendMessage("p [数字] -- 设置物品获得概率");
                 sender.sendMessage("say [文字]");
+                break;
             default:
                 sender.sendMessage("you can use /yz recipe help get more details.");
                 break;
@@ -189,10 +190,18 @@ public class YzCommandHandler implements CommandExecutor {
                     sender.sendMessage("you can use /yz item help get more details.");
                 }
                 break;
+            case "count":
+                if(strings.length>=3){
+                    int count=Integer.parseInt(strings[2]);
+                    sender.getItemInHand().setAmount(count);
+                }
+                break;
             case "help":
                 sender.sendMessage("name [名字] -- 修改名字");
                 sender.sendMessage("enc [附魔] [等级] -- 修改附魔");
                 sender.sendMessage("attr [属性] [属性操作] [等级] -- 修改属性");
+                sender.sendMessage("count [数量] -- 修改数量");
+                break;
             default:
                 sender.sendMessage("you can use /yz item help get more details.");
                 break;

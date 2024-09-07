@@ -13,7 +13,8 @@ repositories {
 
 dependencies {
     implementation(files("E:\\MineCraft\\spigot-api-1.19.2-R0.1-20221106.071812-39.jar"))
-    // https://mvnrepository.com/artifact/org.spigotmc/spigot
+//    implementation(files("E:\\GitDown\\bukkit\\target\\bukkit-1.21.1-R0.1-SNAPSHOT.jar"))
+//     https://mvnrepository.com/artifact/org.spigotmc/spigot
 //    compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 //    compileOnly group: 'org.spigotmc', name: 'spigot', version: '1.21'
     testImplementation platform('org.junit:junit-bom:5.9.1')

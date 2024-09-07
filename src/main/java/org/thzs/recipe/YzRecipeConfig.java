@@ -40,6 +40,10 @@ public class YzRecipeConfig {
         Recipe.add(new YzRecipe(location,Recipe.size()));
     }
     public void reload(){
+        for(YzRecipe i:Recipe){
+            i.deinit();
+        }
+
         //去重
         RecipeLocation=removeSame(RecipeLocation);
 
@@ -50,6 +54,11 @@ public class YzRecipeConfig {
             }else{
                 addRecipe(i);
             }
+        }
+    }
+    public void deinit(){
+        for(YzRecipe i:Recipe){
+            i.deinit();
         }
     }
     public List<Location> removeSame(List<Location> source){

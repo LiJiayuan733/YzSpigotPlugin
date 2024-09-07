@@ -31,6 +31,7 @@ public class YzPlugin extends JavaPlugin {
         effect=new YzEffectHandlerThread(2);
         recipe=new YzRecipeConfig(YzRecipeUtils.loadRecipeConfig());
 
+        System.out.println(getServer().getClass());
         getLogger().info("Yz Recipe Count: "+recipe.Recipe.size());
         Objects.requireNonNull(Bukkit.getPluginCommand("yz")).setExecutor(new YzCommandHandler());
         Objects.requireNonNull(Bukkit.getPluginCommand("yz")).setTabCompleter(new YzTabCompleter());
@@ -43,6 +44,7 @@ public class YzPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        recipe.deinit();
         YzRecipeUtils.saveRecipeConfig(recipe.RecipeLocation);
         getLogger().info("YzPlugin Disable");
     }

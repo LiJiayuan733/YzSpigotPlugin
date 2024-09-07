@@ -48,7 +48,7 @@ public class YzTabCompleter implements TabCompleter {
                 list=new String[]{"reload","p","say","help"};
                 break;
             case "item":
-                list=new String[]{"name","enc","attr","help"};
+                list=new String[]{"name","enc","attr","count","help"};
                 break;
             default:
                 list=new String[]{};

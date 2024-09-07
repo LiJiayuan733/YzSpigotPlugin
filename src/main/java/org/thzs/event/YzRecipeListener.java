@@ -10,9 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.thzs.YzPlugin;
 import org.thzs.recipe.YzRecipe;
@@ -20,6 +18,8 @@ import org.thzs.uitils.YzRecipeUtils;
 
 import java.util.List;
 import java.util.Objects;
+
+import static org.bukkit.event.inventory.InventoryType.SlotType.RESULT;
 
 public class YzRecipeListener implements Listener {
     public int random(YzRecipe result,Inventory inventory){
@@ -128,6 +128,68 @@ public class YzRecipeListener implements Listener {
 //            }
 //        }
     }
+    public boolean checkItem(ItemStack item, ItemStack item2){
+        if(item==null&& item2!=null||item!=null&& item2==null){
+            return false;
+        }else if(item==null&&item2==null){
+            return true;
+        }else{
+            ItemMeta meta1=item.getItemMeta();
+            ItemMeta meta2=item2.getItemMeta();
+            if (meta1==null&& meta2!=null||meta1!=null&& meta2==null){
+                return false;
+            }else if (meta1==null&& meta2==null){
+                return true;
+            }else{
+                //检测名字是否相同
+                String Name1=meta1.getDisplayName();
+                String Name2=meta2.getDisplayName();
+                if(Name1==null&& Name2!=null||Name1!=null&& Name2==null){
+                    return false;
+                }else if(Name1==null&& Name2==null){
+                    return true;
+                }else if(!Name1.equals(Name2)){
+                    return false;
+                }else{
+                    //检测附魔是否相同
+                    if(meta1.hasEnchants()&& meta2.hasEnchants()){
+                        if(meta1.getEnchants().equals(meta2.getEnchants())){
+                            //检测属性是否相同
+                            if(!meta1.getItemFlags().equals(meta2.getItemFlags())){
+                                return false;
+                            }else{
+                                //END
+                                return true;
+                            }
+                        }
+                    }else if(meta1.hasEnchants()==meta2.hasEnchants()){
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+    }
+    public void checkRecipe(InventoryClickEvent event, YzRecipe recipe){
+        Inventory inventory=event.getClickedInventory();
+        if(event.getSlotType()!=RESULT){
+            int choice=random(recipe,event.getClickedInventory());
+            event.setCurrentItem(recipe.result[choice]);
+            return;
+        }
+        for (int i=0;i<recipe.items.length;i++){
+            if(!checkItem(((CraftingInventory) inventory).getMatrix()[i],recipe.items[i])){
+                event.setCancelled(true);
+                return;
+            }
+        }
+        int choice=random(recipe,event.getClickedInventory());
+        event.setCurrentItem(recipe.result[choice]);
+        //公告
+        if(recipe.Say[choice]!=null){
+            Bukkit.broadcastMessage(YzRecipeUtils.parseSay(recipe.Say[choice],event));
+        }
+    }
 
     //检测配方是否匹配
     @EventHandler
@@ -139,13 +201,23 @@ public class YzRecipeListener implements Listener {
         }
         if(inventory.getType()== InventoryType.WORKBENCH){
             switch (action){
-                case PLACE_ONE:
-                case PLACE_ALL:
-                case PLACE_SOME:
+//                case PLACE_ONE:
+//                case PLACE_ALL:
+//                case PLACE_SOME:
+//                case SWAP_WITH_CURSOR:
+//                    ItemStack itemStack=event.getCursor();
+//                    RecipeCheck(inventory,event.getView().getPlayer(),event);
+//                    break;
+                case DROP_ONE_SLOT:
+                case DROP_ALL_SLOT:
+                case DROP_ALL_CURSOR:
+                case DROP_ONE_CURSOR:
                 case SWAP_WITH_CURSOR:
-                    ItemStack itemStack=event.getCursor();
-                    RecipeCheck(inventory,event.getView().getPlayer(),event);
-                    break;
+                case CLONE_STACK:
+                case COLLECT_TO_CURSOR:
+                case MOVE_TO_OTHER_INVENTORY:
+                case HOTBAR_MOVE_AND_READD:
+                case HOTBAR_SWAP:
                 case PICKUP_ONE:
                 case PICKUP_HALF:
                 case PICKUP_SOME:
@@ -159,12 +231,7 @@ public class YzRecipeListener implements Listener {
                                 if(s.startsWith("[EXAMPLE")){
                                     int index=Integer.parseInt(s.replace("[EXAMPLE","").replace("]",""));
                                     YzRecipe recipe=YzPlugin.instance.recipe.Recipe.get(index);
-                                    int choice=random(recipe,inventory);
-                                    event.setCurrentItem(recipe.result[choice]);
-                                    //公告
-                                    if(recipe.Say[choice]!=null){
-                                        Bukkit.broadcastMessage(YzRecipeUtils.parseSay(recipe.Say[choice],event));
-                                    }
+                                    checkRecipe(event,recipe);
                                 }
                             }
                         }
