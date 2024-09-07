@@ -38,10 +38,40 @@ public class ItemUtils {
         meta.addAttributeModifier(attr,attrm);
         return this;
     }
+    public ItemUtils attrClear(Attribute attr){
+        meta.removeAttributeModifier(attr);
+        return this;
+    }
     public ItemUtils lore(String lore){
         if(meta.hasLore()){
             List<String> l=meta.getLore();
             l.add(lore);
+            meta.setLore(l);
+            return this;
+        }
+        ArrayList<String> l=new ArrayList<>();
+        l.add(lore);
+        meta.setLore(l);
+        return this;
+    }
+
+    //匹配开始的修改
+    public ItemUtils startWithLore(String head,String lore){
+        if(meta.hasLore()){
+            List<String> l=meta.getLore();
+            if(l==null){
+                l=new ArrayList<>();
+            }
+            boolean isSet=false;
+            for (int i=0;i<l.size();i++){
+                if(l.get(i).startsWith(head)){
+                    isSet=true;
+                    l.set(i,lore);
+                }
+            }
+            if(!isSet){
+                l.add(lore);
+            }
             meta.setLore(l);
             return this;
         }

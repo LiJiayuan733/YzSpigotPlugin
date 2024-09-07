@@ -3,12 +3,15 @@ package org.thzs.uitils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.thzs.YzPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class YzRecipeUtils {
     public static List<Location> RecipeLocation=new ArrayList<>();
@@ -46,5 +49,31 @@ public class YzRecipeUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public static String parseSay(String s, InventoryClickEvent event){
+        String item_name;
+        String player_name;
+
+        player_name=event.getWhoClicked().getName();
+
+        if(event.getCurrentItem()==null){
+            item_name="什么都没有呢OVO";
+        }else{
+            ItemMeta meta= event.getCurrentItem().getItemMeta();
+            if(meta==null){
+                item_name=event.getCurrentItem().getType().name();
+            }else{
+                String name=meta.getDisplayName();
+                if(name.equals("")){
+                    item_name=event.getCurrentItem().getType().name();
+                }else{
+                    item_name=name;
+                }
+            }
+        }
+
+        s=s.replace("{player}",player_name);
+        s=s.replace("{item_name}",item_name);
+        return s;
     }
 }

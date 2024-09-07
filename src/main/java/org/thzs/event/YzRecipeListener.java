@@ -1,5 +1,6 @@
 package org.thzs.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,32 +16,33 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.thzs.YzPlugin;
 import org.thzs.recipe.YzRecipe;
+import org.thzs.uitils.YzRecipeUtils;
 
 import java.util.List;
 import java.util.Objects;
 
 public class YzRecipeListener implements Listener {
-    public ItemStack random(YzRecipe result,Inventory inventory){
+    public int random(YzRecipe result,Inventory inventory){
         if(result.resultPRange[result.resultSize-1]!=0&&result.resultSize>1){
             double d=YzPlugin.instance.random.nextFloat((float) 0, (float) result.resultPRange[result.resultSize-1]);
             System.out.println(result.resultPRange[result.resultSize-1]+","+d);
             if(result.resultSize==2){
                 if(result.resultPRange[0]<d){
-                    return result.result[1];
+                    return 1;
                 }else{
-                    return result.result[0];
+                    return 0;
                 }
             }else{
                 if(result.resultPRange[1]<d){
-                    return result.result[2];
+                    return 2;
                 }else if(result.resultPRange[0]<d){
-                    return result.result[1];
+                    return 1;
                 }else{
-                    return result.result[0];
+                    return 0;
                 }
             }
         }else{
-            return result.result[0];
+            return 0;
         }
     }
     //完成最后的检测
@@ -77,27 +79,28 @@ public class YzRecipeListener implements Listener {
 
     }
     public void RecipeCheck(Inventory inventory, HumanEntity player, InventoryClickEvent event){
-        for(YzRecipe recipe:YzPlugin.instance.recipe.Recipe){
-            int uncheck=0;
-            ItemStack uncheckItem=null;
-            int uncheckIndex=0;
-            for (int j=0;j<9;j++){
-                ItemStack type1=recipe.items[j];
-                ItemStack type2=((CraftingInventory) inventory).getMatrix()[j];
-                if ((type1 == null && type2 !=null)||(type1 != null && type2 ==null)){
-                    if(type2==null&&uncheck<2){
-                        uncheck++;
-                        uncheckItem=type1;
-                        uncheckIndex=j;
-                    }else {
-                        return;
-                    }
-                }else if(type1 != null && type1.getType() != type2.getType()){
-                    return;
-                }
-            }
-            new Thread(new RecipeSetRunnable(uncheckIndex, uncheckItem, uncheck, (CraftingInventory) inventory,recipe)).start();
-        }
+//        for(YzRecipe recipe:YzPlugin.instance.recipe.Recipe){
+//            int uncheck=0;
+//            ItemStack uncheckItem=null;
+//            int uncheckIndex=0;
+//            for (int j=0;j<9;j++){
+//                ItemStack type1=recipe.items[j];
+//                ItemStack type2=((CraftingInventory) inventory).getMatrix()[j];
+//                if ((type1 == null && type2 !=null)||(type1 != null && type2 ==null)){
+//                    if(type2==null&&uncheck<2){
+//                        uncheck++;
+//                        uncheckItem=type1;
+//                        uncheckIndex=j;
+//                    }else {
+//                        return;
+//                    }
+//                }else if(type1 != null && type1.getType() != type2.getType()){
+//                    return;
+//                }
+//            }
+//            new Thread(new RecipeSetRunnable(uncheckIndex, uncheckItem, uncheck, (CraftingInventory) inventory,recipe)).start();
+//        }
+
 //        for (Location i: YzRecipeUtils.RecipeLocation){
 //            Block block=i.getBlock();
 //            if(block.getType()== Material.CHEST){
@@ -155,7 +158,13 @@ public class YzRecipeListener implements Listener {
                             for(String s:str){
                                 if(s.startsWith("[EXAMPLE")){
                                     int index=Integer.parseInt(s.replace("[EXAMPLE","").replace("]",""));
-                                    event.setCurrentItem(random(YzPlugin.instance.recipe.Recipe.get(index),inventory));
+                                    YzRecipe recipe=YzPlugin.instance.recipe.Recipe.get(index);
+                                    int choice=random(recipe,inventory);
+                                    event.setCurrentItem(recipe.result[choice]);
+                                    //公告
+                                    if(recipe.Say[choice]!=null){
+                                        Bukkit.broadcastMessage(YzRecipeUtils.parseSay(recipe.Say[choice],event));
+                                    }
                                 }
                             }
                         }

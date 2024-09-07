@@ -8,9 +8,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.thzs.uitils.ItemUtils;
 
-import java.util.List;
-import java.util.Objects;
-
 public class YzRecipe {
     public static int[] ChestBlockIndexMap ={0,1,2, 9,10,11, 18,19,20,
                                             6,7,8,
@@ -22,6 +19,7 @@ public class YzRecipe {
     public double[] resultP=new double[3];
     public int resultSize;
     public double[] resultPRange= {0,0,0};
+    public String[] Say={null,null,null};
     public YzRecipe(Location location,int index){ //位置
         Block block=location.getBlock();
         if(block.getType()== Material.CHEST){
@@ -42,10 +40,14 @@ public class YzRecipe {
                         setIndex++;
                         continue;
                     }
-                    String s=findLore(config[setIndex],"[YzP]");
-                    if(s!=null){
-                        resultP[setIndex]=Double.parseDouble(s);
+                    String P=findLore(config[setIndex],"[YzP]");
+                    String S=findLore(config[setIndex],"[YzS]");
+                    if(P!=null){
+                        resultP[setIndex]=Double.parseDouble(P);
                         resultPRange[setIndex]=setIndex==0?resultP[setIndex]:resultP[setIndex-1]+resultP[setIndex];
+                    }
+                    if(S!=null){
+                        Say[setIndex]=S;
                     }
                     setIndex++;
                 }
